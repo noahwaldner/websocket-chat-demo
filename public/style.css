@@ -57,3 +57,35 @@ body {
 #messages>li:nth-child(odd) {
     background: #efefef;
 }
+
+#connected {
+    background-color: white;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid red;
+}
+
+#connected>li {
+    padding: 0.2rem 1rem;
+}
+
+
+.page-wrap {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.main-content {
+    width: 70%;
+}
+.main-sidebar {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    width: 30%;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
