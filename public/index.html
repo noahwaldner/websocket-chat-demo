@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<head>
+    <title>Chat client</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <label id="name"></label><input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+</body>
+<script>
+    var name = prompt("Please enter your name", "Harry Potter");
+    var color = intToRGB(hashCode(name));
+    var socket = io("http://localhost:3000");
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+
+    document.getElementById('name').innerText = name
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (input.value) {
+            let data = {
+                message: input.value,
+                name: name,
+                color: color
+            }
+
+            socket.emit('chat message', JSON.stringify(data));
+            input.value = '';
+        }
+    });
+
+    socket.on('chat message', function (msg) {
+            console.log(msg)
+            var data = JSON.parse(msg);
+            var item = document.createElement('li');
+            item.textContent = "<"+data.name +"> " + data.message;
+            item.style="color: #"+data.color;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+
+    function hashCode(str) { // java String#hashCode
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return hash;
+    } 
+
+    function intToRGB(i){
+        var c = (i & 0x00FFFFFF)
+            .toString(16)
+            .toUpperCase();
+
+        return "00000".substring(0, 6 - c.length) + c;
+    }
+</script>
+
+</html>
