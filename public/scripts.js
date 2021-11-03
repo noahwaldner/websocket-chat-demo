@@ -1,56 +1,82 @@
-var name = "";
+//Get users name
+let name = "";
 while(!name || name === "" || name == "null") {
     name = prompt("Please enter your name", "Harry Potter");
 }
+// Defined variables and initialize needed libraries
+let notifs = false;
+let color = getColorFromName(name);
+const socket = io("http://localhost:3000");
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+let lastMsg = "Demo text just here to test the functionality without having to type to much.";
 
-var color = getColorFromName(name);
-var socket = io("http://localhost:3000");
-var form = document.getElementById('form');
-var input = document.getElementById('input');
-var lastMsg = "Demo text just here to test the functionality without having to type to much.";
-input.onkeydown = checkKey;
+//attach events and setup UI
+input.onkeydown = checkUpKey;
 input.focus();
 document.getElementById('name').innerText = name
 
-socket.emit('join the party', name);
-socket.emit('chat message', {
-    message: "Joined the party",
+// Inform the server that we are ready and pass the username
+socket.emit('join the party', {
     name: name,
     color: color
 });
 
-socket.on('members updated', function(msg) {
+// React on user list change
+socket.on('members updated', function(data) {
     connected.innerText = "";
-    msg.forEach(element => {
-        console.log(element)
-        var item = document.createElement('li');
-        item.textContent = element.name;
+    console.log("Members update", data)
+    data.forEach(u => {
+        console.log(u)
+        const item = document.createElement('li');
+        item.textContent = u.name;
+        item.style="color: #"+u.color;
         connected.appendChild(item);
     });
 });
 
+// React on form Submit
 form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (input.value) {
-        socket.emit('chat message', {
-            message: input.value,
-            name: name,
-            color: color
-        });
-        lastMsg = input.value;
+
+        if (input.value === "enable notifications") {
+            notifs = true;
+            Notification.requestPermission(function (result) {
+                alert("Notifications "+ result)
+              });
+        }
+
+        else if (input.value === "dissable notifications") {
+            notifs = false;
+        }
+
+        else {
+            socket.emit('chat message', {
+                message: input.value,
+                name: name,
+                color: color
+            });
+            lastMsg = input.value;
+        }
         input.value = '';
     }
 });
 
+// React on incoming messages
 socket.on('chat message', function (data) {
-        console.log(data)
-        var item = document.createElement('li');
-        item.textContent = "<"+data.name +"> " + data.message;
-        item.style="color: #"+data.color;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
-    });
+    console.log(data)
+    var item = document.createElement('li');
+    item.textContent = "<"+data.name +"> " + data.message;
+    item.style="color: #"+data.color;
+    messages.appendChild(item);
+    messages.scrollTo(0, messages.scrollHeight);
+    if (notifs) {
+        nonPersistentNotification(name + ": " + item.textContent);
+    }
+});
 
+// Get color from Name
 function getColorFromName(str){
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
@@ -63,10 +89,40 @@ function getColorFromName(str){
     return "00000".substring(0, 6 - c.length) + c;
 }
 
-function checkKey(e) {
+// Check if Up Key pressed
+function checkUpKey(e) {
     e = e || window.event;
     if (e.keyCode == '38') {
         input.value = lastMsg;
-        console.log("up")
+    }
+}
+
+// Show notifications
+function nonPersistentNotification(msg) {
+    console.log("Try display notification");
+    if (!('Notification' in window)) {
+        alert('Notification API not supported!');
+        return;
+    }
+
+    try {
+        var notification = new Notification(msg);
+    } catch (err) {
+        alert('Notification API error: ' + err);
+    }
+}
+
+function persistentNotification(msg) {
+    if (!('Notification' in window) || !('ServiceWorkerRegistration' in window)) {
+        alert('Persistent Notification API not supported!');
+        return;
+    }
+
+    try {
+        navigator.serviceWorker.getRegistration()
+            .then((reg) => reg.showNotification(msg))
+            .catch((err) => alert('Service Worker registration error: ' + err));
+    } catch (err) {
+        alert('Notification API error: ' + err);
     }
 }

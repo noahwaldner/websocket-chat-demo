@@ -13,7 +13,6 @@ const io = require("socket.io")(server, {
 
 app.use(cors());
 
-
 let connected = [];
 
 io.on('connection', (socket) => {
@@ -21,7 +20,8 @@ io.on('connection', (socket) => {
 
     connected.push({
         sockId: socket.id,
-        name: "Unknow"
+        name: "["+socket.id+"]",
+        color: "000000"
     })
 
     socket.on('disconnect', () => {
@@ -44,14 +44,22 @@ io.on('connection', (socket) => {
     });
     socket.on('chat message', (msg) => {
         console.log(msg, socket.id);
-        io.emit('chat message', msg);
+        io.emit('chat message', {...msg, socketId: socket.id });
     });
-    socket.on('join the party', (msg) => {
-        console.log("Join the party", msg, socket.id);
+    socket.on('join the party', (data) => {
+        console.log("Join the party", data, socket.id);
         connected
             .filter(c => c.sockId == socket.id)
-            .map(c => c.name = msg);
+            .map(c => {
+                c.name = data.name;
+                c.color = data.color
+            });
         io.emit('members updated', connected)
+        io.emit('chat message', {
+            message: "Joined the party",
+            name: data.name,
+            color: data.color
+        });
         console.log("Connected", connected);
     })
 });

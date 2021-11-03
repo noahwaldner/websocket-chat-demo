@@ -80,6 +80,8 @@ body {
 }
 .main-content {
     width: 70%;
+    overflow-y:scroll;
+    max-height: 100vh;
 }
 .main-sidebar {
     -webkit-box-flex: 1;
