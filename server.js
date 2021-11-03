@@ -4,6 +4,10 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 
+var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+var led = new Gpio(12, 'out'); //use GPIO pin 4, and specify that it is output
+led.writeSync(0);
+
 const io = require("socket.io")(server, {  
     cors: {    
         origin: "*",    
@@ -47,6 +51,15 @@ io.on('connection', (socket) => {
     socket.on('chat message', (msg) => {
         console.log(msg, socket.id);
         io.emit('chat message', {...msg, socketId: socket.id });
+
+        let blkCounter = 20;
+        const iv = setInterval(_ => {
+            led.writeSync(led.readSync() ^ 1);
+            blkCounter--;
+            if (blkCounter <= 0) {
+                clearInterval(iv);
+            }
+        }, 25);
     });
     socket.on('join the party', (data) => {
         console.log("Join the party", data, socket.id);
