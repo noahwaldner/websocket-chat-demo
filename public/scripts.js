@@ -67,14 +67,24 @@ form.addEventListener('submit', function (e) {
 socket.on('chat message', function (data) {
     console.log(data)
     var item = document.createElement('li');
+    
     var span = document.createElement('span');
     span.textContent = "<"+data.name +">";
     span.style="font-weight: bold; padding-right: 0.5rem; color: #"+data.color;
     item.appendChild(span);
+    
     var msg = document.createElement('span');
     msg.textContent = data.message;
     msg.style="color: #"+data.color;
     item.appendChild(msg);
+    
+    var dt = document.createElement('span');
+    const now = new Date();
+    dt.textContent = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    dt.style="float: right; color: #"+data.color;
+    item.appendChild(dt);
+    
+
     messages.appendChild(item);
     item.scrollIntoView(false);
     if (notifs) {
