@@ -36,6 +36,7 @@ io.on('connection', (socket) => {
         let logedOut = connected.filter(c => c.socketId == socket.id);
         if (logedOut) {
             data.name = logedOut[0].name;
+            data.color = logedOut[0].color;
         }
 
         connected = connected.filter(c => c.socketId != socket.id);
