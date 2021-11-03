@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
     console.log('a user connected:', socket.id);
 
     connected.push({
-        sockId: socket.id,
+        socketId: socket.id,
         name: "["+socket.id+"]",
         color: "000000"
     })
@@ -29,15 +29,16 @@ io.on('connection', (socket) => {
         let data = {
             name: "Unknown",
             message: "left the party",
-            color: "000000"
+            color: "000000",
+            socketId: socket.id
         }
         
-        let logedOut = connected.filter(c => c.sockId == socket.id);
+        let logedOut = connected.filter(c => c.socketId == socket.id);
         if (logedOut) {
             data.name = logedOut[0].name;
         }
 
-        connected = connected.filter(c => c.sockId != socket.id);
+        connected = connected.filter(c => c.socketId != socket.id);
         io.emit('members updated', connected);
         io.emit('chat message', data);
         console.log(connected);
@@ -49,7 +50,7 @@ io.on('connection', (socket) => {
     socket.on('join the party', (data) => {
         console.log("Join the party", data, socket.id);
         connected
-            .filter(c => c.sockId == socket.id)
+            .filter(c => c.socketId == socket.id)
             .map(c => {
                 c.name = data.name;
                 c.color = data.color
@@ -58,7 +59,8 @@ io.on('connection', (socket) => {
         io.emit('chat message', {
             message: "Joined the party",
             name: data.name,
-            color: data.color
+            color: data.color,
+            socketId: socket.id
         });
         console.log("Connected", connected);
     })

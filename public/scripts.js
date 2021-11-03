@@ -67,10 +67,16 @@ form.addEventListener('submit', function (e) {
 socket.on('chat message', function (data) {
     console.log(data)
     var item = document.createElement('li');
-    item.textContent = "<"+data.name +"> " + data.message;
-    item.style="color: #"+data.color;
+    var span = document.createElement('span');
+    span.textContent = "<"+data.name +">";
+    span.style="font-weight: bold; padding-right: 0.5rem; color: #"+data.color;
+    item.appendChild(span);
+    var msg = document.createElement('span');
+    msg.textContent = data.message;
+    msg.style="color: #"+data.color;
+    item.appendChild(msg);
     messages.appendChild(item);
-    messages.scrollTo(0, messages.scrollHeight);
+    item.scrollIntoView(false);
     if (notifs) {
         nonPersistentNotification(name + ": " + item.textContent);
     }
