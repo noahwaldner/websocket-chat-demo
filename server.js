@@ -1,11 +1,16 @@
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const http = require('http');
-const server = http.createServer(app);
+const https = require('https');
+const privateKey  = fs.readFileSync('server.key', 'utf8');
+const certificate = fs.readFileSync('server.crt', 'utf8');
+const credentials = {key: privateKey, cert: certificate};
 
-var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-var led = new Gpio(12, 'out'); //use GPIO pin 4, and specify that it is output
+const server = https.createServer(credentials, app);
+
+const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+const led = new Gpio(12, 'out'); //use GPIO pin 4, and specify that it is output
 led.writeSync(0);
 
 const io = require("socket.io")(server, {  
