@@ -53,7 +53,10 @@ function getColorFromName(str){
 }
 
 // React on incoming messages
-socket.on('chat message', function (data) {
+socket.on('chat message', incoming);
+socket.on('join message', incoming);
+
+function incoming(data) {
     console.log(data)
     var item = document.createElement('li');
     
@@ -79,4 +82,4 @@ socket.on('chat message', function (data) {
     if (notifs) {
         nonPersistentNotification(name + ": " + item.textContent);
     }
-});
+}

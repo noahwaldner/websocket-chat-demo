@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
                 c.color = data.color
             });
         io.emit('members updated', connected)
-        io.emit('chat message', {
+        io.emit('join message', {
             message: "Joined the party",
             name: data.name,
             color: data.color,
