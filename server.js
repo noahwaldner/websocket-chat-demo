@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
         console.log('user disconnected', socket.id);
         let data = {
             name: "Unknown",
-            message: "left the party",
+            message: " ist nicht mehr dabei",
             color: "000000",
             socketId: socket.id
         }
@@ -47,6 +47,7 @@ io.on('connection', (socket) => {
         if (logedOut) {
             data.name = logedOut[0].name;
             data.color = logedOut[0].color;
+            data.message = logedOut[0].color + " " + data.message;
         }
 
         connected = connected.filter(c => c.socketId != socket.id);
@@ -79,7 +80,7 @@ io.on('connection', (socket) => {
             });
         io.emit('members updated', connected)
         io.emit('join message', {
-            message: "Joined the party",
+            message: data.name + " ist jetzt im Club",
             name: data.name,
             color: data.color,
             socketId: socket.id
