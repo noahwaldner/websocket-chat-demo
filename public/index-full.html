@@ -5,22 +5,25 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
     <title>Chat client</title>
-    <link rel="stylesheet" href="stylemitflascherurl.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="page-wrap">
         <section class="main-content" role="main">
-            <h3>xxxx</h3>
+            <h3>Messages:</h3>
             <ul id="messages"></ul>
             <form id="form" action="">
                 <label id="name"></label>
                 <input id="input" autocomplete="off" />
-                <button>yyyyy</button>
+                <button>Send</button>
             </form>
         </section>
-        <!-- PLatzhalter: Reagieren wenn jemand dazu kommt -->
+        <aside class="main-sidebar" role="complementary">
+            <h3>Connected:</h3>
+            <ul id="connected"></ul>
+        </aside>
     </div>
 </body>
-<script src="scripts.js"></script> 
+<script src="scripts-full.js"></script> 
 </html>

@@ -1,8 +1,10 @@
 //Get users name
-let name = "";
-while(!name || name === "" || name == "null") {
-    name = prompt("Please enter your name", "Harry Potter");
-}
+let name = "Blubber";
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Platzhalter: " Name Abfragen"
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 // Defined variables and initialize needed libraries
 let notifs = false;
 let color = getColorFromName(name);
@@ -12,7 +14,6 @@ const input = document.getElementById('input');
 let lastMsg = "Demo text just here to test the functionality without having to type to much.";
 
 //attach events and setup UI
-input.onkeydown = checkUpKey;
 input.focus();
 document.getElementById('name').innerText = name
 
@@ -22,46 +23,34 @@ socket.emit('join the party', {
     color: color
 });
 
-// React on user list change
-socket.on('members updated', function(data) {
-    connected.innerText = "";
-    console.log("Members update", data)
-    data.forEach(u => {
-        console.log(u)
-        const item = document.createElement('li');
-        item.textContent = u.name;
-        item.style="color: #"+u.color;
-        connected.appendChild(item);
-    });
-});
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Platzhalter "Reagieren wenn jemand dazu kommt"
+///////////////////////////////////////////////////////////////////////////////////////////////
 
-// React on form Submit
-form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (input.value) {
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Platzhalter: "Message abschicken"
+///////////////////////////////////////////////////////////////////////////////////////////////
 
-        if (input.value === "enable notifications") {
-            notifs = true;
-            Notification.requestPermission(function (result) {
-                alert("Notifications "+ result)
-              });
-        }
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Platzhalter: "Reagieren wenn jemand dazu kommt"
+///////////////////////////////////////////////////////////////////////////////////////////////
 
-        else if (input.value === "dissable notifications") {
-            notifs = false;
-        }
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Platzhalter: "Notifications einschalten"
+///////////////////////////////////////////////////////////////////////////////////////////////
 
-        else {
-            socket.emit('chat message', {
-                message: input.value,
-                name: name,
-                color: color
-            });
-            lastMsg = input.value;
-        }
-        input.value = '';
+// Get color from Name
+function getColorFromName(str){
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-});
+    var c = (hash & 0x00FFFFFF)
+        .toString(16)
+        .toUpperCase();
+
+    return "00000".substring(0, 6 - c.length) + c;
+}
 
 // React on incoming messages
 socket.on('chat message', function (data) {
@@ -91,54 +80,3 @@ socket.on('chat message', function (data) {
         nonPersistentNotification(name + ": " + item.textContent);
     }
 });
-
-// Get color from Name
-function getColorFromName(str){
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    var c = (hash & 0x00FFFFFF)
-        .toString(16)
-        .toUpperCase();
-
-    return "00000".substring(0, 6 - c.length) + c;
-}
-
-// Check if Up Key pressed
-function checkUpKey(e) {
-    e = e || window.event;
-    if (e.keyCode == '38') {
-        input.value = lastMsg;
-    }
-}
-
-// Show notifications
-function nonPersistentNotification(msg) {
-    console.log("Try display notification");
-    if (!('Notification' in window)) {
-        alert('Notification API not supported!');
-        return;
-    }
-
-    try {
-        var notification = new Notification(msg);
-    } catch (err) {
-        alert('Notification API error: ' + err);
-    }
-}
-
-function persistentNotification(msg) {
-    if (!('Notification' in window) || !('ServiceWorkerRegistration' in window)) {
-        alert('Persistent Notification API not supported!');
-        return;
-    }
-
-    try {
-        navigator.serviceWorker.getRegistration()
-            .then((reg) => reg.showNotification(msg))
-            .catch((err) => alert('Service Worker registration error: ' + err));
-    } catch (err) {
-        alert('Notification API error: ' + err);
-    }
-}
