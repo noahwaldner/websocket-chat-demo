@@ -6,7 +6,7 @@ while(!name || name === "" || name == "null") {
 // Defined variables and initialize needed libraries
 let notifs = false;
 let color = getColorFromName(name);
-const socket = io("http://localhost:3000");
+const socket = io("https://172.21.1.32:3000");
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 let lastMsg = "Demo text just here to test the functionality without having to type to much.";

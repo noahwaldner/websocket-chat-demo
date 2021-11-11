@@ -9,10 +9,11 @@ const credentials = {key: privateKey, cert: certificate};
 
 const server = https.createServer(credentials, app);
 
+/*
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 const led = new Gpio(12, 'out'); //use GPIO pin 4, and specify that it is output
 led.writeSync(0);
-
+*/
 const io = require("socket.io")(server, {  
     cors: {    
         origin: "*",    
@@ -57,6 +58,7 @@ io.on('connection', (socket) => {
         console.log(msg, socket.id);
         io.emit('chat message', {...msg, socketId: socket.id });
 
+        /*
         let blkCounter = 20;
         const iv = setInterval(_ => {
             led.writeSync(led.readSync() ^ 1);
@@ -65,6 +67,7 @@ io.on('connection', (socket) => {
                 clearInterval(iv);
             }
         }, 25);
+        */
     });
     socket.on('join the party', (data) => {
         console.log("Join the party", data, socket.id);
