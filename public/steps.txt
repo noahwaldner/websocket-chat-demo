@@ -1,0 +1,17 @@
+HTML / JS / CSS
+
+* Seite anzeigen und editieren
+* CSS fixen
+* Name abfragen
+* Message abschicken
+* Letzte Eingabe wiederholen
+* Reagieren wenn jemand dazu kommt
+* Notifications einschalten
+
+
+
+
+Prep:
+FF
+Allow certif
+https://172.21.1.32:3000/socket.io/socket.io.js
