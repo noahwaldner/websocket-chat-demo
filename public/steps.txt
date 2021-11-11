@@ -1,12 +1,18 @@
+IP DNS SERVER
+
 HTML / JS / CSS
 
 * Seite anzeigen und editieren
+
+* Sockets erklären
+
 * CSS fixen
 * Name abfragen
 * Message abschicken
 * Letzte Eingabe wiederholen
 * Reagieren wenn jemand dazu kommt
 * Notifications einschalten
+* Noah Text to seach
 
 
 
