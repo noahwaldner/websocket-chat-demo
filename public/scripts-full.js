@@ -64,7 +64,10 @@ form.addEventListener('submit', function (e) {
 });
 
 // React on incoming messages
-socket.on('chat message', function (data) {
+socket.on('chat message', incoming);
+socket.on('join message', incoming);
+
+function incoming(data) {
     console.log(data)
     var item = document.createElement('li');
     
@@ -90,7 +93,7 @@ socket.on('chat message', function (data) {
     if (notifs) {
         nonPersistentNotification(name + ": " + item.textContent);
     }
-});
+}
 
 // Get color from Name
 function getColorFromName(str){
