@@ -47,12 +47,12 @@ io.on('connection', (socket) => {
         if (logedOut) {
             data.name = logedOut[0].name;
             data.color = logedOut[0].color;
-            data.message = logedOut[0].color + " " + data.message;
+            data.message = logedOut[0].name + " " + data.message;
         }
 
         connected = connected.filter(c => c.socketId != socket.id);
         io.emit('members updated', connected);
-        io.emit('chat message', data);
+        io.emit('join message', data);
         console.log(connected);
     });
     socket.on('chat message', (msg) => {
