@@ -28,9 +28,11 @@ let connected = [];
 io.on('connection', (socket) => {
     console.log('a user connected:', socket.id);
 
+    var address = socket.handshake.address;
+
     connected.push({
         socketId: socket.id,
-        name: "["+socket.id+"]",
+        name: "["+address.address+"]",
         color: "000000"
     })
 
